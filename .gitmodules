@@ -1,0 +1,21 @@
+[submodule "file-util"]
+	path = file-util
+	url = ../file-util.git
+[submodule "axml-parser"]
+	path = axml-parser
+	url = ../../MCMrARM/axml-parser.git
+[submodule "mcpelauncher-apkinfo"]
+	path = mcpelauncher-apkinfo
+	url = ../mcpelauncher-apkinfo.git
+[submodule "mcpelauncher-extract"]
+	path = mcpelauncher-extract
+	url = ../mcpelauncher-extract.git
+[submodule "google-play-api"]
+	path = google-play-api
+	url = ../../MCMrARM/Google-Play-API.git
+[submodule "playdl-signin-ui-qt"]
+	path = playdl-signin-ui-qt
+	url = ../playdl-signin-ui-qt.git
+[submodule "mcpelauncher-ui-qt"]
+	path = mcpelauncher-ui-qt
+	url = ../mcpelauncher-ui-qt.git
