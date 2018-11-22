@@ -19,6 +19,9 @@ function(git_commit_hash DIR OUT_VAL)
 endfunction()
 git_commit_hash(${CMAKE_SOURCE_DIR} MANIFEST_GIT_COMMIT_HASH)
 
+option(DEB_XENIAL_DEPENDENCIES "Use Ubuntu 16.04 dependency list" OFF)
+mark_as_advanced(DEB_XENIAL_DEPENDENCIES)
+
 add_subdirectory(file-util)
 add_subdirectory(axml-parser)
 add_subdirectory(mcpelauncher-apkinfo)
