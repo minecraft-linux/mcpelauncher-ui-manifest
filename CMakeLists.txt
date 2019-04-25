@@ -19,8 +19,8 @@ function(git_commit_hash DIR OUT_VAL)
 endfunction()
 git_commit_hash(${CMAKE_SOURCE_DIR} MANIFEST_GIT_COMMIT_HASH)
 
-option(DEB_XENIAL_DEPENDENCIES "Use Ubuntu 16.04 dependency list" OFF)
-mark_as_advanced(DEB_XENIAL_DEPENDENCIES)
+set(DEB_OS_NAME "none" CACHE STRING "Specifies the target OS for building the debs (ubuntu-xenial, ubuntu-bionic, ubuntu-disco)")
+mark_as_advanced(DEB_OS_NAME)
 
 add_subdirectory(file-util)
 add_subdirectory(axml-parser)
