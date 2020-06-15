@@ -19,6 +19,3 @@
 [submodule "mcpelauncher-ui-qt"]
 	path = mcpelauncher-ui-qt
 	url = ../mcpelauncher-ui-qt.git
-[submodule "lib/AppImageUpdate"]
-	path = lib/AppImageUpdate
-	url = https://github.com/AppImage/AppImageUpdate
