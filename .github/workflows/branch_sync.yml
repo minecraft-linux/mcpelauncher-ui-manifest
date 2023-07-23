@@ -1,0 +1,103 @@
+name: branch sync
+on:
+  workflow_dispatch:
+  schedule:
+  - cron:  '30 1 * * *'
+jobs:
+  prepare:
+    if: vars.ENABLE_BRANCH_SYNC == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ng
+        path: mcpelauncher-ng
+        submodules: true
+    - uses: actions/checkout@v3
+      with:
+        ref: qt6
+        path: mcpelauncher-qt6
+        submodules: true
+    - name: Update branches
+      run: |
+        set -x
+        dirs=( "mcpelauncher-ng" "mcpelauncher-qt6" )
+        common_submodules=( "file-util" )
+        git -C mcpelauncher-ng/mcpelauncher-ui-qt fetch origin ng
+        git -C mcpelauncher-ng/mcpelauncher-ui-qt reset --hard FETCH_HEAD
+        git -C mcpelauncher-qt6/mcpelauncher-ui-qt fetch origin qt6
+        git -C mcpelauncher-qt6/mcpelauncher-ui-qt reset --hard FETCH_HEAD
+        for dir in "${dirs[@]}"
+        do
+          pushd "$dir"
+          # from https://github.com/orgs/community/discussions/26560
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          for submodule in "${common_submodules[@]}"
+          do
+            git -C "$submodule" fetch origin HEAD
+            git -C "$submodule" reset --hard FETCH_HEAD
+          done
+          git add . && git commit -m "Branch Sync" || (echo "Nothing to do" && exit 0)
+          git push origin "HEAD:refs/heads/branch-sync-$dir" -f 
+          echo "$dir=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          popd
+        done
+      shell: bash
+    outputs:
+      mcpelauncher-ng: ${{ env.mcpelauncher-ng }}
+      mcpelauncher-qt6: ${{ env.mcpelauncher-qt6 }}
+      sync: ${{ env.mcpelauncher-ng && env.mcpelauncher-qt6 && 'true' || 'false' }}
+  linux-AppImage:
+    if: needs.prepare.outputs.sync == 'true'
+    needs: prepare
+    uses: ChristopherHX/linux-packaging-scripts/.github/workflows/main.yml@main
+    with:
+      mcpelauncher-ui-ref: ${{ needs.prepare.outputs.mcpelauncher-ng }}
+  macOS:
+    if: needs.prepare.outputs.sync == 'true'
+    needs: prepare
+    uses: ChristopherHX/osx-packaging-scripts/.github/workflows/main.yml@main
+    with:
+      mcpelauncher-ui-ref: ${{ needs.prepare.outputs.mcpelauncher-ng }}
+  linux-pkg:
+    if: needs.prepare.outputs.sync == 'true'
+    needs: prepare
+    uses: minecraft-linux/pkg/.github/workflows/build-linux.yml@main
+    with:
+      shas: |-
+        {
+          "mcpelauncher-ui-manifest": {
+            "": ${{ tojson(needs.prepare.outputs.mcpelauncher-ng) }},
+            "qt6": ${{ tojson(needs.prepare.outputs.mcpelauncher-qt6) }}
+          }
+        }
+  deploy:
+    if: needs.prepare.outputs.sync == 'true' && !failure() && !cancelled()
+    needs:
+    - prepare
+    - linux-AppImage
+    - macOS
+    - linux-pkg
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ng
+        path: mcpelauncher-ng
+    - uses: actions/checkout@v3
+      with:
+        ref: qt6
+        path: mcpelauncher-qt6
+    - name: Update branches
+      run: |
+        # from https://github.com/orgs/community/discussions/26560
+        git -C mcpelauncher-ng config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git -C mcpelauncher-ng config user.name "github-actions[bot]"
+        git -C mcpelauncher-qt6 config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git -C mcpelauncher-qt6 config user.name "github-actions[bot]"
+        git -C mcpelauncher-ng fetch origin ${{ needs.prepare.outputs.mcpelauncher-ng }}
+        git -C mcpelauncher-ng push origin ${{ needs.prepare.outputs.mcpelauncher-ng }}:ng
+        git -C mcpelauncher-qt6 fetch origin ${{ needs.prepare.outputs.mcpelauncher-qt6 }}
+        git -C mcpelauncher-qt6 push origin ${{ needs.prepare.outputs.mcpelauncher-qt6 }}:qt6
+      shell: bash
