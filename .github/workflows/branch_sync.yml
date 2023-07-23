@@ -22,7 +22,11 @@ jobs:
       run: |
         set -x
         dirs=( "mcpelauncher-ng" "mcpelauncher-qt6" )
-        common_submodules=( "file-util" )
+        common_submodules=( "axml-parser" "file-util" "google-play-api" "mcpelauncher-apkinfo" "mcpelauncher-extract" )
+        git -C mcpelauncher-ng/playdl-signin-ui-qt fetch origin HEAD
+        git -C mcpelauncher-ng/playdl-signin-ui-qt reset --hard FETCH_HEAD
+        git -C mcpelauncher-qt6/playdl-signin-ui-qt fetch origin qt6
+        git -C mcpelauncher-qt6/playdl-signin-ui-qt reset --hard FETCH_HEAD
         git -C mcpelauncher-ng/mcpelauncher-ui-qt fetch origin ng
         git -C mcpelauncher-ng/mcpelauncher-ui-qt reset --hard FETCH_HEAD
         git -C mcpelauncher-qt6/mcpelauncher-ui-qt fetch origin qt6
