@@ -19,3 +19,6 @@
 [submodule "mcpelauncher-ui-qt"]
 	path = mcpelauncher-ui-qt
 	url = ../mcpelauncher-ui-qt.git
+[submodule "mcpelauncher-common"]
+	path = mcpelauncher-common
+	url = ../mcpelauncher-common.git
