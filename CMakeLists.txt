@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 string(TIMESTAMP BUILD_TIMESTAMP "%Y%m%d-%H%M%S" UTC)
 
 find_program(GIT_EXEC git)
