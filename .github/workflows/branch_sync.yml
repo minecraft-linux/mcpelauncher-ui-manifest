@@ -58,6 +58,7 @@ jobs:
     uses: ChristopherHX/linux-packaging-scripts/.github/workflows/main.yml@main
     with:
       mcpelauncher-ui-ref: ${{ needs.prepare.outputs.mcpelauncher-ng }}
+      mcpelauncher-ui-qt6-ref: ${{ needs.prepare.outputs.mcpelauncher-qt6 }}
   macOS:
     if: needs.prepare.outputs.sync == 'true'
     needs: prepare
