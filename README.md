@@ -4,3 +4,7 @@ This Project contains the User Interface to login, download and manage Versions 
 
 # Wiki
 Please check our wiki https://mcpelauncher.readthedocs.io for information about compiling or installing this launcher.
+
+## LAUNCHER_VERSION_COMPAT
+
+This file contains a compatibility version level for mcpelauncher-updates to selectively require launcher updates additionally to unlock specific versions.

@@ -25,6 +25,10 @@ git_commit_hash(${CMAKE_SOURCE_DIR} MANIFEST_GIT_COMMIT_HASH)
 set(DEB_OS_NAME "none" CACHE STRING "Specifies the target OS for building the debs (ubuntu-xenial, ubuntu-bionic, ubuntu-disco)")
 mark_as_advanced(DEB_OS_NAME)
 
+file(STRINGS "${CMAKE_SOURCE_DIR}/LAUNCHER_VERSION_COMPAT" LAUNCHER_VERSION_COMPATS)
+list(GET LAUNCHER_VERSION_COMPATS 0 LAUNCHER_VERSION_COMPAT)
+set(LAUNCHER_VERSION_COMPAT ${LAUNCHER_VERSION_COMPAT} CACHE STRING "" FORCE)
+
 add_subdirectory(file-util)
 add_subdirectory(axml-parser)
 add_subdirectory(mcpelauncher-apkinfo)
